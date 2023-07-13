@@ -1,13 +1,13 @@
 import java.util.HashMap;
+import enums.MovieType;
 
 public class RentalInfo {
-
   public String statement(Customer customer) {
     HashMap<String, Movie> movies = new HashMap();
-    movies.put("F001", new Movie("You've Got Mail", "regular"));
-    movies.put("F002", new Movie("Matrix", "regular"));
-    movies.put("F003", new Movie("Cars", "childrens"));
-    movies.put("F004", new Movie("Fast & Furious X", "new"));
+    movies.put("F001", new Movie("You've Got Mail", MovieType.REGULAR.getValue()));
+    movies.put("F002", new Movie("Matrix", MovieType.REGULAR.getValue()));
+    movies.put("F003", new Movie("Cars", MovieType.CHILDRENS.getValue()));
+    movies.put("F004", new Movie("Fast & Furious X", MovieType.NEW.getValue()));
 
     double totalAmount = 0;
     int frequentEnterPoints = 0;
@@ -16,16 +16,16 @@ public class RentalInfo {
       double thisAmount = 0;
 
       // determine amount for each movie
-      if (movies.get(r.getMovieId()).getCode().equals("regular")) {
+      if (movies.get(r.getMovieId()).getCode().equals(MovieType.REGULAR.getValue())) {
         thisAmount = 2;
         if (r.getDays() > 2) {
           thisAmount = ((r.getDays() - 2) * 1.5) + thisAmount;
         }
       }
-      if (movies.get(r.getMovieId()).getCode().equals("new")) {
+      if (movies.get(r.getMovieId()).getCode().equals(MovieType.NEW.getValue())) {
         thisAmount = r.getDays() * 3;
       }
-      if (movies.get(r.getMovieId()).getCode().equals("childrens")) {
+      if (movies.get(r.getMovieId()).getCode().equals(MovieType.CHILDRENS.getValue())) {
         thisAmount = 1.5;
         if (r.getDays() > 3) {
           thisAmount = ((r.getDays() - 3) * 1.5) + thisAmount;
