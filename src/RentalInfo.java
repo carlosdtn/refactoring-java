@@ -13,33 +13,19 @@ public class RentalInfo {
     int frequentEnterPoints = 0;
     String result = "Rental Record for " + customer.getName() + "\n";
     for (MovieRental r : customer.getRentals()) {
-      double thisAmount = 0;
+        Movie movie = movies.get(r.getMovieId());
+        double thisAmount = MovieTypeCalculator.calculatePrice(movie.getCode(), r.getDays());
 
-      // determine amount for each movie
-      if (movies.get(r.getMovieId()).getCode().equals(MovieType.REGULAR.getValue())) {
-        thisAmount = 2;
-        if (r.getDays() > 2) {
-          thisAmount = ((r.getDays() - 2) * 1.5) + thisAmount;
+        // add frequent bonus points
+        frequentEnterPoints++;
+        // add bonus for a two day new release rental
+        if (movie.getCode().equals(MovieType.NEW.getValue()) && r.getDays() > 2) {
+            frequentEnterPoints++;
         }
-      }
-      if (movies.get(r.getMovieId()).getCode().equals(MovieType.NEW.getValue())) {
-        thisAmount = r.getDays() * 3;
-      }
-      if (movies.get(r.getMovieId()).getCode().equals(MovieType.CHILDRENS.getValue())) {
-        thisAmount = 1.5;
-        if (r.getDays() > 3) {
-          thisAmount = ((r.getDays() - 3) * 1.5) + thisAmount;
-        }
-      }
 
-      //add frequent bonus points
-      frequentEnterPoints++;
-      // add bonus for a two day new release rental
-      if (movies.get(r.getMovieId()).getCode() == MovieType.NEW.getValue() && r.getDays() > 2) frequentEnterPoints++;
-
-      //print figures for this rental
-      result += "\t" + movies.get(r.getMovieId()).getTitle() + "\t" + thisAmount + "\n";
-      totalAmount = totalAmount + thisAmount;
+        // print figures for this rental
+        result += "\t" + movie.getTitle() + "\t" + thisAmount + "\n";
+        totalAmount += thisAmount;
     }
     // add footer lines
     result += "Amount owed is " + totalAmount + "\n";
